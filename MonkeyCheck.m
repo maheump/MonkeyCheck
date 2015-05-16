@@ -149,4 +149,4 @@ title('Checker versus non-checker monkey');
 
 %% Save %%
 
-% matlab2tikz('figurehandle', gcf, 'MonkeyCheck.tex', 'showInfo', false, 'standalone', true);
+% matlab2tikz('figurehandle', gcf, '~/MonkeyCheck/Figure/MonkeyCheck.tex', 'showInfo', false, 'standalone', true);

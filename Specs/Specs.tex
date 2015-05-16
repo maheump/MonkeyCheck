@@ -16,11 +16,9 @@
 
 The time pressure module is simply a sigmoid function of the number of trials 
 since the beginning of the blocks.
-
 \begin{equation}
   \tau_{i} = \frac{1}{1 + \exp(-\lambda i - \theta)}
 \end{equation}
-
 Where $i$ is the trial number, $\lambda$ is the slope of the curve and $\theta$ the trial number at which the 
 pressure begins to push the behavior toward a check.
 
@@ -29,26 +27,22 @@ pressure begins to push the behavior toward a check.
 This module simply accumulates the number of correct trials since the beginning 
 of the block. The accumulation is weighted by an exponential decay such that the 
 participation of the very last trial is far beyond the ones of older trials.
-
 \begin{equation}
   \kappa_{i} = \frac{\sum_{i=1}^{N} y_{i} . \exp(\gamma . (i-1))}{\sum_{i=1}^{N} \exp(\gamma . (i-1))}
 \end{equation}
-
 Where $y_{i}=\{0,1\}$ depending on whether the main-task trial was correct or not. Note also that $\kappa$ is normalized such that it only can evolve between 0 and 1. 
-Furthermore there is no forgetting \textit{per se} in the model. However the exponential decay, initially implemented to inhibit post-error checking, also account for 
+Furthermore there is no forgetting \textit{per se} in the model. However the exponential decay here, initially implemented to inhibit post-error checking, also account for 
 the memory since the older trials have very low weights (almost 0).
 
 \subsection{Information seeking module}
 
 Up to now, there is no effect of the previous check on deciding whether to check 
 or not. The aim of this new module is to consider that the probability of 
-checking is function of both the distance of the previous check $i_{C_{\text{last}}$ and the gage 
+checking is function of both the distance to the previous check $i_{C_{\text{last}}$ and the gauge 
 size $g_{\text{last}}$ displayed during this previous check.
-
 \begin{equation}
   \phi_{i} = 1 - \exp((i-i_{C_{\text{last}}}) . \alpha . \log(g_{\text{last}})) 
 \end{equation}
-
 Note that there is an information-sensitivity rate $\alpha$ reflecting the speed 
 at which the information one can get from the last check becomes obsolete.
 We also assume a linear relationship between the lost of information and 
@@ -57,7 +51,6 @@ the probability of checking again.
 \section{Simulation}
 
 Each of these algorithmic module can be combined with respect to one an other.
-
 \begin{gather}
   \mathcal{M}^{(1)}_{i} = \tau_{i}(\theta,\lambda) \\
   \mathcal{M}^{(2)}_{i} = \kappa_{i}(\gamma) \\
@@ -66,29 +59,37 @@ Each of these algorithmic module can be combined with respect to one an other.
   \mathcal{M}^{(5)}_{i} = \kappa_{i}(\gamma) . \phi(\alpha) \\
   \mathcal{M}^{(6)}_{i} = \kappa_{i}(\gamma) . \tau_{i}(\theta,\lambda) . \phi(\alpha)
 \end{gather}
-
 In brackets are the free parameters of each module. Each of these models are 
 able to derive the probability of checking in each trial. To decide whether the 
 model wants to check or not, we simply use a softmax rule as follows.
-
 \begin{equation}
-  C_{i} = \frac{\beta.\exp(p(c)_{i})}{\beta.\exp(p(c)_{i}) + \beta.\exp(p(\bar{c})_{i})}
+  C^{*}_{i} = \frac{\beta.\exp(p(c)_{i})}{\beta.\exp(p(c)_{i}) + \beta.\exp(p(\bar{c})_{i})}
 \end{equation}
 
 \section{Fit}
 
-In oder to perform a fitting procedure, we will need 3 things:
+In oder to fit the models to the effective behavior, we will need 3 things:
 \begin{itemize}
   \item{the vector of right and wrong answer $y$,}
-  \item{the trial in which the monkey performed a check,}
+  \item{the trials in which the monkey performed a check,}
   \item{the gauge filling rule (so that we can give the model $g_{\text{last}}$ at any trial).}
 \end{itemize}
+Contrary to most of the decision-making models, the fit of these algorithms cannot relie on
+an implicit rule (e.g. accuracy since the last reversal) driving the dependent variable we are interested in (the checking).
+Nevertheless, we can still manage to perform the models' fitting procedure in three separate ways as follows.
+\begin{gather}
+  C^{*}_{i} \sim \frac{1}{1 + \exp(\beta_{0} + \beta_{1} . p(c)_{i})} \\
+  \arg \min \sum_{i=1}^{N} (C_{i} - C^{*}_{i})^{2} \\
+  \arg \min \sum_{i=1}^{N} (C_{i} - p(c)_{i})^{2}
+\end{gather}
+Where $C$ is the array of checks performed by the monkey and $C^{*}$ the ones 
+performed by the model.
 
-Note thus that these are \textit{meta} models since they can only predict the 
+Note also that these are \textit{meta} models since they can only predict the 
 checking behavior. In other words, they need to know the type I information (outcomes in the main task) to perform 
 their predictions.
 
-By computing a BIC for each model, one can get the best model: the one with (i) the few number of free parameter(s)
+Finally, by computing a BIC for each model, one can get the best model: the one with (i) the few number of free parameter(s)
 and (ii) that best explains the data. Interestingly, each model represents a 
 particular computational scenario which combined 1, 2 or 3 computational 
 module(s).
