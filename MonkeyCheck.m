@@ -1,17 +1,11 @@
 %% MonkeyCheck
-% Hints:
-% - multiplier par le feedback du dernier essai
-% - utiliser le remplissage de la jauge comme modulateur du checking
-% - passer p(c) dans un softmax dont on fittera la temperature
 % Create a pool of models with different properties:
 %   - M1: a simple time pressure
 %   - M2: a weighted accumulator
 %   - M3: a weighted accumulator with a time pressure (the one that is above)
-%   - M4:
-%   - M5:
-%   - M6:
-%   - M4: a weighted accumulator associated with an informativeness  a time pressure
-%   - 
+%   - M4: a time pressure with an informativeness account
+%   - M5: a weighted accumulator with an informativeness account
+%   - M6: a weighted accumulator with an informativeness account and a time pressure
 
 % Maxime Maheu
 % Cogmaster (ENS, Paris 5, EHESS)
