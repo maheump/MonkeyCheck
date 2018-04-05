@@ -59,7 +59,7 @@ for ep = 2:Nep
 end
 
 % To avoid numeric overflow, we only keep 2 decimals
-pCheck = cellfun(@(x) RoundDec(x, 2), pCheck, 'UniformOutput', false);
+pCheck = cellfun(@(x) round(x, 2), pCheck, 'UniformOutput', false);
 toc;
 
 %% Fit the data
